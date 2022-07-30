@@ -21,6 +21,10 @@ class faction:
     def units(self):
         return self._units
 
+    @property
+    def units(self):
+        return self._units
+
     @units.setter
     def units(self, units):
         self._units = units
@@ -61,6 +65,22 @@ class faction:
             self._enemy1 = _enemy1;
             self._enemy2 = _enemy2;
 
+    @property
+    def enemy1(self):
+        return self._enemy1
+
+    @enemy1.setter
+    def enemy1(self, enemy1: 'faction'):
+        self._enemy1 = enemy1
+
+    @property
+    def enemy2(self):
+        return self._enemy2
+
+    @enemy2.setter
+    def enemy2(self, enemy2: 'faction'):
+        self._enemy2 = enemy2
+
     def perform_attack(self):
         pass
     def receive_attack(self):
@@ -94,8 +114,8 @@ class faction:
             self._alive = False
 
         else:
-            self._units += self._unit_regen_num
-            self._total_health = int(self._units * self._health_points)
+            self.units(self.units + self._unit_regen_num) 
+            self._total_health(int(self._units * self._health_points))
 
 class Orcs(faction):
 
@@ -104,28 +124,31 @@ class Orcs(faction):
 
     def perform_attack(self):
 
-        if((self._enemy1._alive == True and self._enemy2._alive == False)):
-            self._enemy1.receive_attack(self._enemy1, 1);
-        elif((self._enemy1._alive == False and self._enemy2._alive == True)):
-            self._enemy2.receive_attack(self._enemy2, 1)
-        elif(self._enemy1._alive == True and self._enemy2._alive == True):
+        if((self.enemy1.alive == True and self.enemy2.alive == False)):
+            self.enemy1.receive_attack(self, 1);
+        elif((self.enemy1.alive == False and self.enemy2.alive == True)):
+            self.enemy2.receive_attack(self, 1)
+        elif(self.enemy1.alive == True and self.enemy2.alive == True):
 
-            if(type(self._enemy1) == Elves):
-                self._enemy1.receive_attack(self._enemy1, 0.7)
-                self._enemy2.receive_attack(self._enemy2, 0.3)
+            if(type(self.enemy1) == Elves):
+                self.enemy1.receive_attack(self, 0.7)
+                self.enemy2.receive_attack(self, 0.3)
 
-            if(type(self._enemy1) == Dwarves):
-                self._enemy1.receive_attack(self._enemy1, 0.3)
-                self._enemy2.receive_attack(self._enemy2, 0.7)
+            if(type(self.enemy1) == Dwarves):
+                self.enemy1.receive_attack(self, 0.3)
+                self.enemy2.receive_attack(self, 0.7)
 
     def receive_attack(self, attacker: faction, unit_percentage):
+
         damage_coefficient = 1
+
         if(type(attacker) == Elves):
             damage_coefficient = 0.75
+
         elif(type(attacker) == Dwarves):
             damage_coefficient = 0.8
  
-        self._units -= int(((unit_percentage * attacker._units) * attacker._attack_points * damage_coefficient) / attacker._health_points)
+        self.units(self.units - int(((unit_percentage * attacker._units) * attacker._attack_points * damage_coefficient) / attacker._health_points))
             
     def purchase_weapons(self, weapon_points):
 
@@ -151,19 +174,19 @@ class Dwarves(faction):
         super().__init__(_name, _units, _attack_points, _health_points, _unit_regen_num)
 
     def perform_attack(self):
-        if((self._enemy1._alive == True and self._enemy2._alive == False)):
-            self._enemy1.receive_attack(self._enemy1, 1);
-        elif((self._enemy1._alive == False and self._enemy2._alive == True)):
-            self._enemy2.receive_attack(self._enemy2, 1)
-        elif(self._enemy1._alive == True and self._enemy2._alive == True):
-            self._enemy1.receive_attack(self._enemy1, 0.5)
-            self._enemy2.receive_attack(self._enemy2, 0.5)
+        if((self.enemy1.alive == True and self.enemy2.alive == False)):
+            self.enemy1.receive_attack(self, 1);
+        elif((self.enemy1.alive == False and self.enemy2.alive == True)):
+            self.enemy2.receive_attack(self, 1)
+        elif(self.enemy1.alive == True and self.enemy2.alive == True):
+            self.enemy1.receive_attack(self, 0.5)
+            self.enemy2.receive_attack(self, 0.5)
 
     def receive_attack(self, attacker: faction, unit_percentage):
         self.units(self.units - int(((unit_percentage * attacker._units) * attacker._attack_points) / attacker._health_points))
         
     def purchase_weapons(self, weapon_points):
-        self._attack_points += weapon_points
+        self.attack_points(self.attack_points + weapon_points)
         gold = 10 * weapon_points
 
         return gold
@@ -184,53 +207,55 @@ class Elves(faction):
         super().__init__(_name, _units, _attack_points, _health_points, _unit_regen_num)
 
     def perform_attack(self):
-        if((self._enemy1._alive == True and self._enemy2._alive == False)):
+        if((self.enemy1.alive == True and self._enemy2.alive == False)):
             if(type(self._enemy1) == Dwarves):
-                self._attack_points *= 1.5
-                self._enemy1.receive_attack(self._enemy1, 1)
-                self._attack_points /= 1.5
+                self.attack_points(self.attack_points * 1.5)
+                self.enemy1.receive_attack(self.enemy1, 1)
+                self.attack_points(self.attack_points / 1.5)
             else:
-                self._enemy1.receive_attack(self._enemy1, 1)
+                self.enemy1.receive_attack(self.enemy1, 1)
         elif((self._enemy1._alive == False and self._enemy2._alive == True)):
             if(type(self._enemy2) == Dwarves):
-                self._attack_points *= 1.5
+                self.attack_points(self.attack_points * 1.5)
                 self._enemy2.receive_attack(self._enemy2, 1)
-                self._attack_points /= 1.5
+                self.attack_points(self.attack_points / 1.5)
             else:
                 self._enemy2.receive_attack(self._enemy2, 1)
         elif(self._enemy1._alive == True and self._enemy2._alive == True):
             if(type(self._enemy1) == Dwarves):
-                self._attack_points *= 1.5
+                self.attack_points(self.attack_points * 1.5)
                 self._enemy1.receive_attack(self._enemy1, 0.4)
-                self._attack_points /= 1.5
+                self.attack_points(self.attack_points / 1.5)
 
                 self._enemy2.receive_attack(self._enemy2, 0.6)
             elif(type(self._enemy2) == Dwarves):
                 self._enemy1.receive_attack(self._enemy1, 0.6)
 
-                self._attack_points *= 1.5
+                self.attack_points(self.attack_points * 1.5)
                 self._enemy2.receive_attack(self._enemy2, 0.4)
-                self._attack_points /= 1.5
+                self.attack_points(self.attack_points / 1.5)
 
     def receive_attack(self, attacker: faction, unit_percentage):
+
         damage_coefficient = 1
+
         if(type(attacker) == Orcs):
             damage_coefficient = 1.25
         elif(type(attacker) == Dwarves):
             damage_coefficient = 0.75
         
-        self._units -= int(((unit_percentage * attacker._units) * attacker._attack_points * damage_coefficient) / attacker._health_points)
+        self.units(self.units - int(((unit_percentage * attacker._units) * attacker._attack_points * damage_coefficient) / attacker._health_points))
 
     def purchase_weapons(self, weapon_points):
 
-        self._attack_points += (2 * weapon_points)
+        self.attack_points(self.health_points + (2 * weapon_points))
         gold = 15 * weapon_points
 
         return gold
 
     def purchase_armors(self, armor_points):
 
-        self._health_points += (4 * armor_points)
+        self.health_points(self.health_points + (4 * armor_points))
         gold = 5 * armor_points
 
         return gold
