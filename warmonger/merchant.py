@@ -106,7 +106,6 @@ class Merchant():
 
         return True
 
-    # I added this method to make the code more readable and added it here since it is for the merchant class.
     # This method helps making selling equipment process more readable in the main file.
     # faction_selection parameter is selected in the main file to determine which faction to sell equipment to.
     def sell_selected_faction(self, faction_selection):
