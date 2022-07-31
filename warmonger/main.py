@@ -104,9 +104,9 @@ while(restart == 1):
         # End the current game.
         elif(selection == 4):
 
-            print("")
+            print("!!")
             print("Ending current game...")
-            print("")
+            print("!!")
 
             # Selection value is set to 0 to get out of the game.
             selection = 0
