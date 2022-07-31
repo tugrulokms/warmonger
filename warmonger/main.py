@@ -1,23 +1,23 @@
 from factions import *
 from merchant import *
 
-restart = int(1)
+restart: int = 1
 
-print("**********Welcome to The Warmonger: A New Dimension!**********")
+print("********** Welcome to The Warmonger: A New Dimension! **********")
 print("")
 print("In this game, you will play as a war merchant trying to keep a war in balance to profit the most!")
 print("")
 
 while(restart == 1):
 
-    selection = int(1)
+    selection: int = 1
     restart = 0
 
-    merchant = Merchant(10, 10)
+    merchant = Merchant()
 
-    merchant.assign_factions(Elves("Elves", 15, 15, 35, 3),
-                            Orcs("Orcs", 30, 10, 50, 5),
-                            Dwarves("Dwarves", 20, 12, 60, 2))
+    merchant.assign_factions(Orcs("Orcs", 40, 25, 40, 3),
+                            Dwarves("Dwarves", 30, 20, 60, 2),
+                            Elves("Elves", 30, 40, 40, 2))
 
     merchant.orcs.assign_enemies(merchant.dwarves, merchant.elves)
     merchant.dwarves.assign_enemies(merchant.elves, merchant.orcs)
@@ -32,7 +32,7 @@ while(restart == 1):
         print("End current game :\t\t\t(4)")                
         print("Quit :\t\t\t\t\t(0)")
         
-        selection = int(input())  
+        selection = int(input("Enter a number: "))  
 
         if(selection == 0):
             pass
@@ -43,12 +43,12 @@ while(restart == 1):
             print("")
         elif(selection == 2):
             print("Choose one of the factions to sell equipment:")
-            print("Elves:\t\t(1)")
-            print("Orcs:\t\t(2)")
-            print("Dwarves:\t(3)")
+            print("Orcs:\t\t(1)")
+            print("Dwarves:\t(2)")
+            print("Elves:\t\t(3)")
             print("Main menu:\t(any other input)")
 
-            faction_selection = int(input())
+            faction_selection = int(input("Choose faction: "))
 
             if(faction_selection == 1):
                 merchant.sell_selected_faction(1)
@@ -59,6 +59,7 @@ while(restart == 1):
             else:
                 pass
         elif(selection == 3):
+
             if(merchant.orcs.alive == True):
                 merchant.orcs.perform_attack()
             if(merchant.dwarves.alive == True):
