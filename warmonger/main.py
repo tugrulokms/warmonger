@@ -16,11 +16,11 @@ def sell_selected_faction(merchant: Merchant, faction_selection):
 
         if(amount_selection > 0):
             if(faction_selection == 1):
-                merchant.sell_weapons(merchant.faction1, amount_selection)
+                merchant.sell_weapons(merchant.orcs, amount_selection)
             elif(faction_selection == 2):
-                merchant.sell_weapons(merchant.faction2, amount_selection)
+                merchant.sell_weapons(merchant.dwarves, amount_selection)
             elif(faction_selection == 3):
-                merchant.sell_weapons(merchant.faction3, amount_selection)
+                merchant.sell_weapons(merchant.elves, amount_selection)
 
         else:
             print("You can't enter any non-positive value.")
@@ -32,33 +32,33 @@ def sell_selected_faction(merchant: Merchant, faction_selection):
 
         if(amount_selection > 0):
             if(faction_selection == 1):
-                merchant.sell_armors(merchant.faction1, amount_selection)
+                merchant.sell_armors(merchant.orcs, amount_selection)
             elif(faction_selection == 2):
-                merchant.sell_armors(merchant.faction2, amount_selection)
+                merchant.sell_armors(merchant.dwarves, amount_selection)
             elif(faction_selection == 3):
-                merchant.sell_armors(merchant.faction3, amount_selection)
+                merchant.sell_armors(merchant.elves, amount_selection)
 
         else:
             print("You can't enter any non-positive value.")
 
-selection = 1
-restart = 1
+selection = int(1)
+restart = int(1)
+
+merchant = Merchant(10, 10)
+
+merchant.assign_factions(Elves("Elves", 15, 15, 35, 3),
+                        Orcs("Orcs", 30, 10, 50, 5),
+                        Dwarves("Dwarves", 20, 12, 60, 2))
+
+merchant.orcs.assign_enemies(merchant.dwarves, merchant.elves)
+merchant.dwarves.assign_enemies(merchant.elves, merchant.orcs)
+merchant.elves.assign_enemies(merchant.orcs, merchant.dwarves)
 
 print("**********Welcome to The Warmonger: A New Dimension!**********")
 print("")
 print("In this game, you will play as a war merchant trying to keep a war in balance to profit the most!")
 print("")
 while(selection > 0):
-
-    merchant = Merchant(10, 10)
-
-    merchant.assign_factions(Elves("Elves", 15, 15, 35, 15),
-                        Orcs("Orcs", 30, 10, 50, 10),
-                        Dwarves("Dwarves", 20, 12, 60, 8))
-
-    merchant.faction1.assign_enemies(merchant.faction2, merchant.faction3)
-    merchant.faction2.assign_enemies(merchant.faction3, merchant.faction1)
-    merchant.faction3.assign_enemies(merchant.faction1, merchant.faction2)
 
     print("----------------------- MENU ------------------------")
     print("See the information of faction(s):\t(1)")
@@ -72,14 +72,14 @@ while(selection > 0):
     if(selection == 0):
         pass
     elif(selection == 1):
-        merchant.faction1.print()
-        merchant.faction2.print()
-        merchant.faction3.print()
+        merchant.orcs.print()
+        merchant.dwarves.print()
+        merchant.elves.print()
         print("")
     elif(selection == 2):
         print("Choose one of the factions to sell equipment:")
-        print("Elves:\t(1)")
-        print("Orcs:\t(2)")
+        print("Elves:\t\t(1)")
+        print("Orcs:\t\t(2)")
         print("Dwarves:\t(3)")
         print("Main menu:\t(any other input)")
 
@@ -94,19 +94,17 @@ while(selection > 0):
         else:
             pass
     elif(selection == 3):
-        if(merchant.faction1._alive == True):
-            merchant.faction1.perform_attack()
-        if(merchant.faction2._alive == True):
-            merchant.faction2.perform_attack()
-        if(merchant.faction3._alive == True):
-            merchant.faction3.perform_attack()
-        print("-----------------")
+        if(merchant.orcs.alive == True):
+            merchant.orcs.perform_attack()
+        if(merchant.dwarves.alive == True):
+            merchant.dwarves.perform_attack()
+        if(merchant.elves.alive == True):
+            merchant.elves.perform_attack()
         print("Ending turn...")
-        print("-----------------")
         merchant.end_turn();
-        merchant.faction1.end_turn();
-        merchant.faction2.end_turn();
-        merchant.faction3.end_turn();
+        merchant.orcs.end_turn();
+        merchant.dwarves.end_turn();
+        merchant.elves.end_turn();
     elif(selection == 4):
         restart = 1
     else:

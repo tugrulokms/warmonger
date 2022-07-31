@@ -15,18 +15,18 @@ class Merchant():
         self.__left_armor_points = __starting_armor_point
         self.__revenue = 0
 
-    def assign_factions(self, faction1: faction, faction2: faction, faction3: faction):
-        self.faction1 = faction1
-        self.faction2 = faction2
-        self.faction3 = faction3
+    def assign_factions(self, orcs: Orcs, dwarves: Dwarves, elves: Elves):
+        self.orcs = orcs
+        self.dwarves = dwarves
+        self.elves = elves
 
     @property
-    def starting_weapon_points(self):
-        return self.__starting_weapon_points
+    def starting_weapon_point(self):
+        return self.__starting_weapon_point
 
     @property
-    def starting_armor_points(self):
-        return self.__starting_armor_points
+    def starting_armor_point(self):
+        return self.__starting_armor_point
 
     @property
     def left_weapon_points(self):
@@ -52,37 +52,38 @@ class Merchant():
     def revenue(self, revenue):
         self.__revenue = revenue
 
-
     def sell_weapons(self, faction: faction, weapon_points):
-        if(faction._alive == False):
+        if(faction.alive == False):
             print("The faction you want to sell weapons is dead!")
             return False
-        elif(self.__left_weapon_points < weapon_points):
+        elif(self.left_weapon_points < weapon_points):
             print("You try to sell more weapons than you have in possession.")
             return False
 
-        self.revenue(self.revenue + faction.purchase_weapons(weapon_points))
-        self.left_weapon_points(self.left_weapon_points - weapon_points)
+        self.revenue += faction.purchase_weapons(weapon_points)
+        self.left_weapon_points -= weapon_points
         
         print("Weapons sold!")
+        print("Weapon points left: " + str(self.left_weapon_points))
 
         return True
 
     def sell_armors(self, faction: faction, armor_points):
-        if(faction._alive == False):
+        if(faction.alive == False):
             print("The faction you want to sell armors is dead!")
             return False
-        elif(self.__left_armor_points < armor_points):
+        elif(self.left_armor_points < armor_points):
             print("You try to sell more armors than you have in possession.")
             return False
 
-        self.revenue(self.revenue + faction.purchase_armors(armor_points))
-        self.left_armor_points(self.left_armor_points - armor_points)
+        self.revenue += faction.purchase_armors(armor_points)
+        self.left_armor_points -= armor_points
         
         print("Armors sold!")
-        
+        print("Armor points left: " + str(self.left_armor_points))
+
         return True
 
     def end_turn(self):
-        self.left_weapon_points(self.starting_weapon_point())
-        self.left_armor_points(self.starting_armor_point())
+        self.left_weapon_points = self.starting_weapon_point
+        self.left_armor_points = self.starting_armor_point
