@@ -84,6 +84,47 @@ class Merchant():
 
         return True
 
+    
+    def sell_selected_faction(self, faction_selection):
+        print("Choose what equipment to sell:")
+        print("Weapons:\t\t(1)")
+        print("Armor:\t\t\t(2)")
+        print("Main menu:\t\t(any other input)")
+
+        equipment_selection = int(input())
+
+        if(equipment_selection == 1):
+            print("Enter how much weapons do you want to sell:")
+
+            amount_selection = int(input())
+
+            if(amount_selection > 0):
+                if(faction_selection == 1):
+                    self.sell_weapons(self.orcs, amount_selection)
+                elif(faction_selection == 2):
+                    self.sell_weapons(self.dwarves, amount_selection)
+                elif(faction_selection == 3):
+                    self.sell_weapons(self.elves, amount_selection)
+
+            else:
+                print("You can't enter any non-positive value.")
+
+        elif(equipment_selection == 2):
+            print("Enter how much armors do you want to sell:")
+
+            amount_selection = int(input())
+
+            if(amount_selection > 0):
+                if(faction_selection == 1):
+                    self.sell_armors(self.orcs, amount_selection)
+                elif(faction_selection == 2):
+                    self.sell_armors(self.dwarves, amount_selection)
+                elif(faction_selection == 3):
+                    self.sell_armors(self.elves, amount_selection)
+
+            else:
+                print("You can't enter any non-positive value.")
+
     def end_turn(self):
         self.left_weapon_points = self.starting_weapon_point
         self.left_armor_points = self.starting_armor_point
